@@ -4,10 +4,10 @@ import "../css/main.css"
 
 
 export default function Map({ loc }) {
-    async function getDepartures(lat, lon) {
+    async function getDepartures(loc) {
         // TODO: Connect to departures API
         try {
-            const reqUrl = `localhost:5000?lat=${lat}&lon=${lon}`
+            const reqUrl = `http://127.0.0.1:5000/nearest?lat=${loc[0]}&lon=${loc[1]}`
             console.log(reqUrl)
             const response = await fetch(reqUrl, { method: 'GET' });
 
@@ -26,7 +26,7 @@ export default function Map({ loc }) {
     function ChangeLoc({ center }) {
         const map = useMap();
         map.setView(center);
-        
+        getDepartures(center)
 
     }
 
