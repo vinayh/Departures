@@ -2,7 +2,7 @@
 import "../css/main.css"
 
 
-export function Postcode({ setLoc }) {
+export function Postcode({ map }) {
     async function handlePostcode(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -21,7 +21,7 @@ export function Postcode({ setLoc }) {
 
             const responseJson = await response.json()
             console.log(responseJson)
-            setLoc([responseJson.result.latitude, responseJson.result.longitude])
+            map.flyTo([responseJson.result.latitude, responseJson.result.longitude])
         } catch (e) {
             console.error('Error fetching postcode:', e)
             // TODO: Display error (flash message or similar)
@@ -40,7 +40,7 @@ export function Postcode({ setLoc }) {
     )
 }
 
-export function Geolocation({ setLoc }) {
+export function Geolocation({ map }) {
     function handleGeolocation() {
         const options = {
             timeout: 5000,
@@ -50,7 +50,7 @@ export function Geolocation({ setLoc }) {
     
         function success(posObj) {
             console.log(`Got geolocation: ${posObj}, ${posObj.coords.latitude}, ${posObj.coords.longitude}`)
-            setLoc([posObj.coords.latitude, posObj.coords.longitude])
+            map.flyTo([posObj.coords.latitude, posObj.coords.longitude])
         }
     
         function error(e) {
@@ -82,23 +82,26 @@ export function Geolocation({ setLoc }) {
     )
 }
 
-export function LatLonForm({ setLoc }) {
+export function LatLonForm({ map }) {
     function handleFormLatLon(e) {
         e.preventDefault();
         const form = e.target;
         const formData = new FormData(form);
         const formJson = Object.fromEntries(formData.entries())
-        setLoc([formJson["latitude"], formJson["longitude"]]);
+        const formCenter = [formJson["latitude"], formJson["longitude"]]
+        console.log(`Setting center to ${formCenter}`)
+        // setCenter(formCenter);
+        map.flyTo(formCenter)
     }
 
     return (
         <form onSubmit={handleFormLatLon}>
             <label>
-                Latitude: <input name="latitude" defaultValue="51.5072" />
+                Latitude: <input name="latitude" />
             </label>
             <br></br>
             <label>
-                Longitude: <input name="longitude" defaultValue="-0.1276" />
+                Longitude: <input name="longitude" />
             </label>
 
             <button type="submit">Submit</button>
@@ -106,15 +109,15 @@ export function LatLonForm({ setLoc }) {
     )
 }
 
-export default function Controls({ setLoc }) {
+export default function Controls({ map }) {
     return (
         <>
         <h1>Departures</h1>
-        <Geolocation setLoc={setLoc} />
+        <Geolocation map={map} />
         <hr></hr>
-        <Postcode setLoc={setLoc} />
+        <Postcode map={map} />
         <hr></hr>
-        <LatLonForm setLoc={setLoc} />
+        <LatLonForm map={map} />
         </>
     )
 }

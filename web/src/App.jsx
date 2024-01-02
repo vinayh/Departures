@@ -4,17 +4,18 @@ import Controls from "./components/Controls"
 import Map from "./components/Map"
 
 export default function App() {
-    const [loc, setLoc] = useState([51.5072, -0.1276])
+    const [map, setMap] = useState(null);
+    const [center, setCenter] = useState({lat: 51.5072, lng: -0.1276})
 
     return (
         <>
         {/* <Welcome /> */}
         <div className="column left">
-        <Controls setLoc={setLoc} />
+        <Controls map={map} />
         </div>
         
         <div className="column right">
-        <Map loc={loc} />
+        <Map center={center} setCenter={setCenter} map={map} setMap={setMap} />
         </div>
         </>
     );
