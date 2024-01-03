@@ -1,13 +1,13 @@
-import { useState, useEffect, Fragment, useCallback, useMemo } from "react"
-import { MapContainer, TileLayer, useMap, Marker } from 'react-leaflet'
+import { React, useState, useEffect, Fragment, useCallback } from "react"
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import "../css/main.css"
 
-// See https://react-leaflet.js.org/docs/example-external-state/ for probably a more relevant guide on
-// using external state with react-leaflet
+type StationDep = [{ id: string, lat: number, lon: number, name: string },
+    { line: string, mode: string, destination: string, arrival_time: string }[]];
 
-// export default async function Map({ loc }: { loc: [number, number] }) {
-export default function Map({ center, setCenter, map, setMap }) {
+
+export default function Map({ center, setCenter, map, setMap }): JSX.Element {
     const [departures, setDepartures] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const defaultCenter = [51.5072, -0.1276]
@@ -31,62 +31,53 @@ export default function Map({ center, setCenter, map, setMap }) {
             <>
                 Latitude: {center.lat.toFixed(4)}, longitude: {center.lng.toFixed(4)}
                 <br></br>
-                <button onClick={resetView}>Reset</button>
+                <button onClick={resetView}>Reset location</button>
             </>
         )
     }
 
-    async function loadDepartures() {
-        try {
-            setIsLoading(true)
-            const reqCenter = map.getCenter()
-            const reqUrl = `http://127.0.0.1:5000/nearest?lat=${reqCenter.lat}&lon=${reqCenter.lng}`
-            console.log(reqUrl)
-            const response = fetch(reqUrl, {method: "GET"})
+    function renderStation(station: StationDep): JSX.Element {
+        return <>
+            <Marker key={station[0].id} position={[station[0].lat, station[0].lon]}>
+                <Popup>
+                    <b>{station[0].name}</b>
+                    <hr></hr>
+                    {station[1].map((dep) => {
+                        const arrival_time: number = new Date(dep.arrival_time).getTime()
+                        const dep_min: number = ((arrival_time - Date.now()) / (1000 * 60))
+                        const dep_min_str: string = dep_min.toFixed(0) !== "-0" ? dep_min.toFixed(0) : "0"
+                        return <p>{dep.line} - {dep.destination} - {dep_min_str}</p>
+                    })}
+                </Popup>
+            </Marker>
+        </>
+    }
+
+    function loadDepartures() {
+        setIsLoading(true)
+        const reqCenter = map.getCenter()
+        const reqUrl = `http://127.0.0.1:5000/nearest?lat=${reqCenter.lat}&lon=${reqCenter.lng}`
+        // console.log(reqUrl)
+        fetch(reqUrl, { method: "GET" })
             .then(response => response.json())
             .then(data => {
-                setDepartures(Object.values(data))
                 setIsLoading(false)
+                const stationDeps: StationDep = Object.values(data)
+                setDepartures(stationDeps.map(renderStation))
             })
-            const responseJson = await response.json();
-            setDepartures(Object.values(responseJson))
-            // console.log(Object.values(responseJson))
-        } catch (e) {
-            console.error('Error fetching departures:', e)
-        }
+            .catch(e => console.error('Error fetching departures:', e))
     }
-
-    function ShowDepartures() {
-        const [departureMarkers, setDepartureMarkers] = useState<JSX.Element[]>([]);
-
-        useEffect(() => {
-            console.log(departures)
-            const markers = departures.map((dep) => (
-                <Marker key={dep.id} position={[dep.lat, dep.lon]} />
-            ));
-            setDepartureMarkers(markers);
-        }, [departures]);
-
-        console.log(departureMarkers)
-        // return <Fragment>{departureMarkers}</Fragment>;
-        return departureMarkers
-    }
-
 
     return (
         <>
-            {/* Lat: {center[0]}, lon: {center[1]} */}
             {map ? <ShowPosition /> : null}
-            {isLoading ? <p>Loading...</p> : <button onClick={loadDepartures}>Update departures</button>}
+            {isLoading ? <button>Loading...</button> : <button onClick={loadDepartures}>Update departures</button>}
             <MapContainer center={defaultCenter} zoom={defaultZoom} ref={setMap}>
                 <TileLayer
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {/* <Fragment>
-                    {departures.map((dep) => <Marker position={[dep[0].lat, dep[0].lon]}></Marker>)}
-                </Fragment> */}
-                <ShowDepartures />
+                <Fragment>{departures}</Fragment>
             </MapContainer>
         </>
     )

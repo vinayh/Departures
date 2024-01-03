@@ -1,9 +1,8 @@
-// import { useEffect } from "react"
 import "../css/main.css"
 
 
-export function Postcode({ map }) {
-    async function handlePostcode(e) {
+export function Postcode({ map }): JSX.Element {
+    async function handlePostcode(e: React.FormEvent) {
         e.preventDefault();
         const formData = new FormData(e.target);
         const postcode = formData.get("postcode");
@@ -14,9 +13,9 @@ export function Postcode({ map }) {
 
             if (!response.ok) {
                 if (response.status == 404) {
-                    this.setState({postcode: "Invalid postcode"})
+                    this.setState({ postcode: "Invalid postcode" })
                 }
-                throw new Error('Error in postcode API response', response.status);
+                throw new Error(`Error in postcode API response ${response.status}`);
             }
 
             const responseJson = await response.json()
@@ -30,33 +29,33 @@ export function Postcode({ map }) {
 
     return (
         <>
-        <form onSubmit={handlePostcode}>
-            <label>
-                Postcode: <input name="postcode" />
-            </label>
-            <button type="submit">Submit</button>
-        </form>
+            <form onSubmit={handlePostcode}>
+                <label>
+                    Postcode: <input name="postcode" />
+                </label>
+                <button type="submit">Submit</button>
+            </form>
         </>
     )
 }
 
-export function Geolocation({ map }) {
+export function Geolocation({ map }): JSX.Element {
     function handleGeolocation() {
         const options = {
             timeout: 5000,
             enableHighAccuracy: true,
             maximumAge: 0,
         };
-    
-        function success(posObj) {
+
+        function success(posObj: GeolocationPosition) {
             console.log(`Got geolocation: ${posObj}, ${posObj.coords.latitude}, ${posObj.coords.longitude}`)
             map.flyTo([posObj.coords.latitude, posObj.coords.longitude])
         }
-    
-        function error(e) {
+
+        function error(e: Error) {
             console.warn(`Geolocation error: ${e}`)
         }
-    
+
         if (navigator.geolocation) {
             navigator.permissions.query({ name: "geolocation" })
                 .then((result) => {
@@ -64,10 +63,10 @@ export function Geolocation({ map }) {
                     if (result.state === "granted" || result.state === "prompt") {
                         navigator.geolocation.getCurrentPosition(success, error, options);
                     }
-                    else {
-                        console.log('Geolocation access denied.');
-                        return <h2>Browser location access denied.</h2>
-                    }
+                })
+                .catch((e) => {
+                    console.log('Geolocation access denied.');
+                    return <h2>Browser location access denied.</h2>
                 })
         }
         else {
@@ -77,21 +76,17 @@ export function Geolocation({ map }) {
 
     return (
         <label>
-        Detect location automatically: <button onClick={handleGeolocation}>Detect location</button>
+            Detect location automatically: <button onClick={handleGeolocation}>Detect location</button>
         </label>
     )
 }
 
-export function LatLonForm({ map }) {
-    function handleFormLatLon(e) {
+export function LatLonForm({ map }): JSX.Element {
+    function handleFormLatLon(e: React.FormEvent) {
         e.preventDefault();
-        const form = e.target;
-        const formData = new FormData(form);
-        const formJson = Object.fromEntries(formData.entries())
-        const formCenter = [formJson["latitude"], formJson["longitude"]]
-        console.log(`Setting center to ${formCenter}`)
-        // setCenter(formCenter);
-        map.flyTo(formCenter)
+        const formLoc = [e.target.latitude.value, e.target.longitude.value]
+        console.log(`Setting center to ${formLoc}`)
+        map.flyTo(formLoc)
     }
 
     return (
@@ -109,15 +104,15 @@ export function LatLonForm({ map }) {
     )
 }
 
-export default function Controls({ map }) {
+export default function Controls({ map }): JSX.Element {
     return (
         <>
-        <h1>Departures</h1>
-        <Geolocation map={map} />
-        <hr></hr>
-        <Postcode map={map} />
-        <hr></hr>
-        <LatLonForm map={map} />
+            <h1>Departures</h1>
+            <Geolocation map={map} />
+            <hr></hr>
+            <Postcode map={map} />
+            <hr></hr>
+            <LatLonForm map={map} />
         </>
     )
 }
