@@ -1,30 +1,27 @@
+import React from "react";
 import "../css/main.css"
 
 
 function Postcode({ map }): JSX.Element {
-    async function handlePostcode(e: React.FormEvent) {
+    function handlePostcode(e: React.FormEvent) {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const postcode = formData.get("postcode");
-        try {
-            const reqUrl = `https://api.postcodes.io/postcodes/${postcode}`
-            console.log(reqUrl)
-            const response = await fetch(reqUrl, { method: 'GET' });
-
-            if (!response.ok) {
-                if (response.status == 404) {
-                    this.setState({ postcode: "Invalid postcode" })
+        const postcode: string = e.target.postcode.value
+        const reqUrl = `https://api.postcodes.io/postcodes/${postcode}`
+        console.log(reqUrl)
+        fetch(reqUrl)
+            .then(res => {
+                if (!res.ok) {
+                    if (res.status == 404) {
+                        // this.setState({ postcode: "Invalid postcode" })
+                        console.log(`Invalid postcode: ${postcode}`)
+                    }
+                    throw new Error(`Error in postcode API response ${res.status}`);
                 }
-                throw new Error(`Error in postcode API response ${response.status}`);
-            }
-
-            const responseJson = await response.json()
-            console.log(responseJson)
-            map.flyTo([responseJson.result.latitude, responseJson.result.longitude])
-        } catch (e) {
-            console.error('Error fetching postcode:', e)
-            // TODO: Display error (flash message or similar)
-        }
+                return res
+            })
+            .then(res => res.json())
+            .then(res => map.flyTo([res.result.latitude, res.result.longitude]))
+            .catch(e => console.error('Error fetching postcode:', e))
     }
 
     return (
@@ -52,7 +49,7 @@ function Geolocation({ map }): JSX.Element {
             map.flyTo([posObj.coords.latitude, posObj.coords.longitude])
         }
 
-        function error(e: Error) {
+        function error(e: GeolocationPositionError) {
             console.warn(`Geolocation error: ${e}`)
         }
 

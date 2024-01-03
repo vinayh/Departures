@@ -34,22 +34,21 @@ export default function Map({ map, setMap }): JSX.Element {
         )
     }
 
-    function renderStation(station: StationDeps): JSX.Element {
+    function renderStation([stn, deps]: StationDeps): JSX.Element {
+        const depsRendered = deps.map((dep) => {
+            const arrival_time: number = new Date(dep.arrival_time).getTime()
+            const dep_min: number = ((arrival_time - Date.now()) / (1000 * 60))
+            const dep_min_str: string = dep_min.toFixed(0)
+            return <p>{dep.line} - {dep.destination} - {dep_min_str !== "-0" ? dep_min_str : "0"}</p>
+        })
         return (
-            <>
-                <Marker key={station[0].id} position={[station[0].lat, station[0].lon]}>
-                    <Popup>
-                        <b>{station[0].name}</b>
-                        <hr></hr>
-                        {station[1].map((dep) => {
-                            const arrival_time: number = new Date(dep.arrival_time).getTime()
-                            const dep_min: number = ((arrival_time - Date.now()) / (1000 * 60))
-                            const dep_min_str: string = dep_min.toFixed(0) !== "-0" ? dep_min.toFixed(0) : "0"
-                            return <p>{dep.line} - {dep.destination} - {dep_min_str}</p>
-                        })}
-                    </Popup>
-                </Marker>
-            </>
+            <Marker key={stn.id} position={[stn.lat, stn.lon]}>
+                <Popup>
+                    <b>{stn.name}</b>
+                    <hr></hr>
+                    {depsRendered}
+                </Popup>
+            </Marker>
         )
     }
 
@@ -59,9 +58,8 @@ export default function Map({ map, setMap }): JSX.Element {
         const reqUrl = `http://127.0.0.1:5000/nearest?lat=${reqCenter.lat}&lon=${reqCenter.lng}`
         // console.log(reqUrl)
         fetch(reqUrl)
-            .then(response => response.json())
-            .then(data => {
-                const allStationDeps: StationDeps[] = Object.values(data)
+            .then(response => Object.values(response.json()))
+            .then((allStationDeps: StationDeps[]) => {
                 setDepartures(allStationDeps.map(renderStation))
                 setIsLoading(false)
             })
