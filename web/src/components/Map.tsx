@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css'
 import "../css/main.css"
 
 type StationDeps = [{ id: string, lat: number, lon: number, name: string },
-    { line: string, mode: string, destination: string, arrival_time: string }[]];
+    { id: string, line: string, mode: string, destination: string, arrival_time: string }[]];
 
 
 export default function Map({ map, setMap }): JSX.Element {
@@ -39,7 +39,7 @@ export default function Map({ map, setMap }): JSX.Element {
             const arrival_time: number = new Date(dep.arrival_time).getTime()
             const dep_min: number = ((arrival_time - Date.now()) / (1000 * 60))
             const dep_min_str: string = dep_min.toFixed(0)
-            return <p>{dep.line} - {dep.destination} - {dep_min_str !== "-0" ? dep_min_str : "0"}</p>
+            return <p key={dep.id}>{dep.line} - {dep.destination} - {dep_min_str !== "-0" ? dep_min_str : "0"}</p>
         })
         return (
             <Marker key={stn.id} position={[stn.lat, stn.lon]}>
@@ -58,8 +58,9 @@ export default function Map({ map, setMap }): JSX.Element {
         const reqUrl = `http://127.0.0.1:5000/nearest?lat=${reqCenter.lat}&lon=${reqCenter.lng}`
         // console.log(reqUrl)
         fetch(reqUrl)
-            .then(response => Object.values(response.json()))
-            .then((allStationDeps: StationDeps[]) => {
+            .then(response => response.json())
+            .then(data => {
+                const allStationDeps: StationDeps[] = Object.values(data)
                 setDepartures(allStationDeps.map(renderStation))
                 setIsLoading(false)
             })
