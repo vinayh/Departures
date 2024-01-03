@@ -4,7 +4,7 @@ import Map from "./components/Map"
 
 export default function App(): JSX.Element {
     const [map, setMap] = useState(null);
-    const [center, setCenter] = useState({lat: 51.5072, lng: -0.1276})
+    
 
     return (
         <>
@@ -13,7 +13,7 @@ export default function App(): JSX.Element {
         </div>
         
         <div className="column right">
-        <Map center={center} setCenter={setCenter} map={map} setMap={setMap} />
+        <Map map={map} setMap={setMap} />
         </div>
         </>
     );

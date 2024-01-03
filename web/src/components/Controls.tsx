@@ -1,7 +1,7 @@
 import "../css/main.css"
 
 
-export function Postcode({ map }): JSX.Element {
+function Postcode({ map }): JSX.Element {
     async function handlePostcode(e: React.FormEvent) {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -39,7 +39,7 @@ export function Postcode({ map }): JSX.Element {
     )
 }
 
-export function Geolocation({ map }): JSX.Element {
+function Geolocation({ map }): JSX.Element {
     function handleGeolocation() {
         const options = {
             timeout: 5000,
@@ -81,7 +81,7 @@ export function Geolocation({ map }): JSX.Element {
     )
 }
 
-export function LatLonForm({ map }): JSX.Element {
+function LatLonForm({ map }): JSX.Element {
     function handleFormLatLon(e: React.FormEvent) {
         e.preventDefault();
         const formLoc = [e.target.latitude.value, e.target.longitude.value]
