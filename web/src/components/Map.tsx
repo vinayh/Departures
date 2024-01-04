@@ -1,7 +1,6 @@
 import { React, useState, useEffect, Fragment, useCallback } from "react"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import { Icon } from "leaflet"
-import 'leaflet/dist/leaflet.css'
 import "../css/main.css"
 
 import { StationDeps, renderSingleDeparture } from "./Departures"
@@ -56,7 +55,7 @@ export default function Map({ map, setMap, departures, centerMarker }): JSX.Elem
 
     return (
         <>
-            {map ? <ShowPosition /> : null}
+            {map ? <ShowPosition /> : <br></br>}
             <MapContainer center={defaultCenter} zoom={defaultZoom} ref={setMap}>
                 <TileLayer
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
