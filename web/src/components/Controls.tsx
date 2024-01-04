@@ -1,13 +1,16 @@
-import React from "react";
+import { React, useState } from "react";
 import "../css/main.css"
 
 export default function Controls({ map, setCenterMarker }): JSX.Element {
+    const [locResult, setLocResult] = useState("")
+
     function updateCenter(centerTuple: [number, number]) {
         map.flyTo(centerTuple, 13)
         setCenterMarker(centerTuple)
     }
 
     function Postcode(): JSX.Element {
+
         function handlePostcode(e: React.FormEvent) {
             e.preventDefault();
             const postcode: string = e.target.postcode.value
@@ -17,7 +20,7 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
                 .then(res => {
                     if (!res.ok) {
                         if (res.status == 404) {
-                            // this.setState({ postcode: "Invalid postcode" })
+                            setLocResult(`❌ Invalid postcode: ${postcode}`)
                             console.log(`Invalid postcode: ${postcode}`)
                         }
                         throw new Error(`Error in postcode API response ${res.status}`);
@@ -25,7 +28,10 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
                     return res
                 })
                 .then(res => res.json())
-                .then(res => updateCenter([res.result.latitude, res.result.longitude]))
+                .then(res => {
+                    setLocResult(`✅ Set to postcode: ${res.result.postcode}`)
+                    updateCenter([res.result.latitude, res.result.longitude])
+                })
                 .catch(e => console.error('Error fetching postcode:', e))
         }
 
@@ -33,10 +39,10 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
             <>
                 <form onSubmit={handlePostcode}>
                     <label>
-                        Postcode: <input name="postcode" />
+                        UK Postcode: <input name="postcode" />
                     </label>
-                    <br></br>
-                    <button type="submit">Submit</button>
+                    &nbsp;
+                    <button type="submit">Go</button>
                 </form>
             </>
         )
@@ -51,12 +57,26 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
             };
 
             function success(posObj: GeolocationPosition) {
-                console.log(`Got geolocation: ${posObj}, ${posObj.coords.latitude}, ${posObj.coords.longitude}`)
-                updateCenter([posObj.coords.latitude, posObj.coords.longitude])
+                const centerTuple = [posObj.coords.latitude, posObj.coords.longitude]
+                console.log(`Got geolocation: ${posObj}, ${centerTuple}`)
+                updateCenter(centerTuple)
+                setLocResult(`✅ Set to coordinates: ${centerTuple.map(x => x.toFixed(4))}`)
             }
 
             function error(e: GeolocationPositionError) {
                 console.warn(`Geolocation error: ${e}`)
+                setLocResult(`❌ Geolocation error: ${e}`)
+                switch(e.code) {
+                    case 1:
+                        setLocResult("❌ Geolocation access denied")
+                        break
+                    case 2:
+                        setLocResult("❌ Geolocation not available")
+                        break
+                    case 3:
+                        setLocResult("❌ Geolocation timeout")
+                        break
+                }
             }
 
             if (navigator.geolocation) {
@@ -69,7 +89,7 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
                     })
                     .catch((e) => {
                         console.log('Geolocation access denied.');
-                        return <h2>Browser location access denied.</h2>
+                        setLocResult(`❌ Geolocation access denied`)
                     })
             }
             else {
@@ -79,8 +99,7 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
 
         return (
             <label>
-                Use browser location:
-                <br></br>
+                Use browser location: &nbsp;
                 <button onClick={handleGeolocation}>Detect location</button>
             </label>
         )
@@ -89,8 +108,9 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
     function LatLonForm(): JSX.Element {
         function handleFormLatLon(e: React.FormEvent) {
             e.preventDefault();
-            // console.log(`Setting center to ${[e.target.latitude.value, e.target.longitude.value]}`)
-            updateCenter([e.target.latitude.value, e.target.longitude.value])
+            const centerTuple = [e.target.latitude.value, e.target.longitude.value]
+            updateCenter(centerTuple)
+            setLocResult(`✅ Set to coordinates: ${centerTuple}`)
         }
 
         return (
@@ -116,6 +136,8 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
             <Postcode />
             <hr></hr>
             <LatLonForm />
+            <hr></hr>
+            {locResult}
         </>
     )
 }
