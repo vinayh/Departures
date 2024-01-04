@@ -18,7 +18,7 @@ export default function Departures({ map, departures, setDepartures, setCenterMa
     function updateDepartures() {
         setIsLoading(true)
         const reqCenter = map.getCenter()
-        const reqUrl = `http://127.0.0.1:5000/nearest?lat=${reqCenter.lat}&lng=${reqCenter.lng}`
+        const reqUrl = `https://departures-backend.azurewebsites.net/api/nearest?lat=${reqCenter.lat}&lng=${reqCenter.lng}`
         // console.log(reqUrl)
         setCenterMarker([reqCenter.lat, reqCenter.lng])
         fetch(reqUrl)
@@ -44,7 +44,7 @@ export default function Departures({ map, departures, setDepartures, setCenterMa
     function StationDepartures(): JSX.Element {
         return <Fragment>
             <ol>
-            {departures.map(renderStationDepartures)}
+                {departures.map(renderStationDepartures)}
             </ol>
         </Fragment>
     }

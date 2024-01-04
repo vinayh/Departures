@@ -10,15 +10,15 @@ export default function App(): JSX.Element {
 
     return (
         <>
-        <div className="column left">
-        <Controls map={map} setCenterMarker={setCenterMarker} />
-        <br></br><br></br>
-        <Departures map={map} departures={departures} setDepartures={setDepartures} setCenterMarker={setCenterMarker} />
-        </div>
-        
-        <div className="column right">
-        <Map map={map} setMap={setMap} departures={departures} centerMarker={centerMarker} />
-        </div>
+            <div className="column left">
+                <Controls map={map} setCenterMarker={setCenterMarker} />
+                <br></br><br></br>
+                <Departures map={map} departures={departures} setDepartures={setDepartures} setCenterMarker={setCenterMarker} />
+            </div>
+
+            <div className="column right">
+                <Map map={map} setMap={setMap} departures={departures} centerMarker={centerMarker} />
+            </div>
         </>
     );
 }

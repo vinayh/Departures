@@ -66,7 +66,7 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
             function error(e: GeolocationPositionError) {
                 console.warn(`Geolocation error: ${e}`)
                 setLocResult(`❌ Geolocation error: ${e}`)
-                switch(e.code) {
+                switch (e.code) {
                     case 1:
                         setLocResult("❌ Geolocation access denied")
                         break
