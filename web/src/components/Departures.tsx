@@ -1,4 +1,5 @@
 import { React, useState, Fragment } from "react"
+import "../css/main.css"
 
 type Departure = { id: string, line: string, mode: string, destination: string, arrival_time: string }
 
@@ -11,7 +12,7 @@ export function renderSingleDeparture(dep: Departure) {
     return <p key={dep.id}>{dep.line} - {dep.destination} - {dep_min_str !== "-0" ? dep_min_str : "0"}</p>
 }
 
-export default function Departures({ map, departures, setDepartures }): JSX.Element {
+export default function Departures({ map, departures, setDepartures, setCenterMarker }): JSX.Element {
     const [isLoading, setIsLoading] = useState(false)
 
     function updateDepartures() {
@@ -19,6 +20,7 @@ export default function Departures({ map, departures, setDepartures }): JSX.Elem
         const reqCenter = map.getCenter()
         const reqUrl = `http://127.0.0.1:5000/nearest?lat=${reqCenter.lat}&lng=${reqCenter.lng}`
         // console.log(reqUrl)
+        setCenterMarker(reqCenter)
         fetch(reqUrl)
             .then(response => response.json())
             .then(data => {
@@ -41,15 +43,15 @@ export default function Departures({ map, departures, setDepartures }): JSX.Elem
 
     function StationDepartures(): JSX.Element {
         return <Fragment>
-            <ul>
-                {departures.map(renderStationDepartures)}
-            </ul>
+            <ol>
+            {departures.map(renderStationDepartures)}
+            </ol>
         </Fragment>
     }
 
     return (
         <>
-            {isLoading ? <button>Loading...</button> : <button onClick={updateDepartures}>Update departures</button>}
+            <button id="update-button" onClick={updateDepartures}>{isLoading ? "Loading..." : "Update departures"}</button>
             <StationDepartures />
         </>
     )

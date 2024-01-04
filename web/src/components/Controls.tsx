@@ -30,6 +30,7 @@ function Postcode({ map }): JSX.Element {
                 <label>
                     Postcode: <input name="postcode" />
                 </label>
+                <br></br>
                 <button type="submit">Submit</button>
             </form>
         </>
@@ -73,7 +74,9 @@ function Geolocation({ map }): JSX.Element {
 
     return (
         <label>
-            Detect location automatically: <button onClick={handleGeolocation}>Detect location</button>
+            Use browser location:
+            <br></br>
+            <button onClick={handleGeolocation}>Detect location</button>
         </label>
     )
 }
@@ -95,7 +98,7 @@ function LatLonForm({ map }): JSX.Element {
             <label>
                 Longitude: <input name="longitude" />
             </label>
-
+            <br></br>
             <button type="submit">Submit</button>
         </form>
     )
