@@ -11,7 +11,7 @@ export default function App(): JSX.Element {
     return (
         <>
         <div className="column left">
-        <Controls map={map} />
+        <Controls map={map} setCenterMarker={setCenterMarker} />
         <br></br>
         <Departures map={map} departures={departures} setDepartures={setDepartures} setCenterMarker={setCenterMarker} />
         </div>

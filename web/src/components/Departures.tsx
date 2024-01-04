@@ -20,7 +20,7 @@ export default function Departures({ map, departures, setDepartures, setCenterMa
         const reqCenter = map.getCenter()
         const reqUrl = `http://127.0.0.1:5000/nearest?lat=${reqCenter.lat}&lng=${reqCenter.lng}`
         // console.log(reqUrl)
-        setCenterMarker(reqCenter)
+        setCenterMarker([reqCenter.lat, reqCenter.lng])
         fetch(reqUrl)
             .then(response => response.json())
             .then(data => {

@@ -62,7 +62,7 @@ export default function Map({ map, setMap, departures, centerMarker }): JSX.Elem
                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {centerMarker ? <Marker position={[centerMarker.lat, centerMarker.lng]}></Marker> : null}
+                {centerMarker ? <Marker position={centerMarker}></Marker> : null}
                 <StationMarkers />
             </MapContainer>
         </>
