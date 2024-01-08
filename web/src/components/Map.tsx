@@ -35,13 +35,13 @@ export default function Map({ map, setMap, departures, centerMarker }): JSX.Elem
         )
     }
 
-    function renderStationMarker([stn, deps]: StationDeps): JSX.Element {
+    function renderStationMarker({ station, departures }: StationDeps): JSX.Element {
         return (
-            <Marker key={stn.id} position={[stn.lat, stn.lon]} icon={stationIcon}>
+            <Marker key={station.id} position={[station.lat, station.lon]} icon={stationIcon}>
                 <Popup>
-                    <b>{stn.name}</b>
+                    <b>{station.name}</b>
                     <hr></hr>
-                    {deps.map(renderSingleDeparture)}
+                    {departures.map(renderSingleDeparture)}
                 </Popup>
             </Marker>
         )

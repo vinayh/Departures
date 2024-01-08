@@ -3,7 +3,9 @@ import "../css/main.css"
 
 type Departure = { id: string, line: string, mode: string, destination: string, arrival_time: string }
 
-export type StationDeps = [{ id: string, lat: number, lon: number, name: string }, Departure[]];
+type Station = { id: string, lat: number, lon: number, name: string }
+
+export type StationDeps = {station: Station, departures: Departure[]};
 
 export function renderSingleDeparture(dep: Departure) {
     const arrival_time: number = new Date(dep.arrival_time).getTime()
@@ -31,12 +33,12 @@ export default function Departures({ map, departures, setDepartures, setCenterMa
             .catch(e => console.error('Error fetching departures:', e))
     }
 
-    function renderStationDepartures([stn, deps]: StationDeps): JSX.Element {
+    function renderStationDepartures({ station, departures }: StationDeps): JSX.Element {
         return (
-            <li key={stn.id}>
-                <b>{stn.name}</b>
+            <li key={station.id}>
+                <b>{station.name}</b>
                 <hr></hr>
-                {deps.map(renderSingleDeparture)}
+                {departures.map(renderSingleDeparture)}
             </li>
         )
     }
