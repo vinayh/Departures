@@ -5,9 +5,9 @@ type Departure = { id: string, line: string, mode: string, destination: string, 
 
 type Station = { id: string, lat: number, lon: number, name: string }
 
-export type StationDeps = { station: Station, departures: Departure[] }
+export type StationDepartures = { station: Station, departures: Departure[] }
 
-type Response = { stnsDeps: StationDeps[], lat: number, lng: number }
+type Response = { stnsDeps: StationDepartures[], lat: number, lng: number }
 
 export function renderSingleDeparture(dep: Departure) {
     const arrival_time: number = new Date(dep.arrival_time).getTime()
@@ -29,14 +29,14 @@ export default function Departures({ map, departures, setDepartures, setCenterMa
             .then(response => response.json())
             .then(data => {
                 const response = data as Response
-                const allStationDeps: StationDeps[] = response.stnsDeps
+                const allStationDeps: StationDepartures[] = response.stnsDeps
                 setDepartures(allStationDeps)
                 setIsLoading(false)
             })
             .catch(e => console.error('Error fetching departures:', e))
     }
 
-    function renderStationDepartures({ station, departures }: StationDeps): JSX.Element {
+    function renderStationDepartures({ station, departures }: StationDepartures): JSX.Element {
         return (
             <li key={station.id}>
                 <b>{station.name}</b>

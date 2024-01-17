@@ -3,8 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import { Icon } from "leaflet"
 import "../css/main.css"
 
-import { StationDeps, renderSingleDeparture } from "./Departures"
-import { stat } from "fs"
+import { StationDepartures, renderSingleDeparture } from "./Departures"
 
 export default function Map({ map, setMap, departures, centerMarker }): JSX.Element {
     const defaultCenter = { lat: 51.5072, lng: -0.1276 }
@@ -35,7 +34,7 @@ export default function Map({ map, setMap, departures, centerMarker }): JSX.Elem
         )
     }
 
-    function renderStationMarker({ station, departures }: StationDeps): JSX.Element {
+    function renderStationMarker({ station, departures }: StationDepartures): JSX.Element {
         return (
             <Marker key={station.id} position={[station.lat, station.lon]} icon={stationIcon}>
                 <Popup>

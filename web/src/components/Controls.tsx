@@ -108,19 +108,25 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
     function LatLonForm(): JSX.Element {
         function handleFormLatLon(e: React.FormEvent) {
             e.preventDefault();
-            const centerTuple = [e.target.latitude.value, e.target.longitude.value]
-            updateCenter(centerTuple)
-            setLocResult(`✅ Set to coordinates: ${centerTuple}`)
+            const lat = e.target.latitude.value
+            const lng = e.target.longitude.value
+            if (!isNaN(lat) && !isNaN(lng)) {
+                updateCenter([lat, lng])
+                setLocResult(`✅ Set to coordinates: ${[lat, lng]}`)
+            } else {
+                console.log("Invalid lat/lng form entry")
+                setLocResult("❌ Invalid coordinates")
+            }
         }
 
         return (
             <form onSubmit={handleFormLatLon}>
                 <label>
-                    Latitude: <input name="latitude" />
+                    Latitude: <input name="latitude" required/>
                 </label>
                 <br></br>
                 <label>
-                    Longitude: <input name="longitude" />
+                    Longitude: <input name="longitude" required/>
                 </label>
                 <br></br>
                 <button type="submit">Submit</button>
