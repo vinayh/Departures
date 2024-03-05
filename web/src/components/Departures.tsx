@@ -1,4 +1,4 @@
-import { React, useState, Fragment } from "react"
+import { useState, Fragment } from "react"
 import "../css/main.css"
 
 type Departure = { id: string, line: string, mode: string, destination: string, arrival_time: string }

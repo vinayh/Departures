@@ -1,4 +1,4 @@
-import { React, useState, useEffect, Fragment, useCallback } from "react"
+import { useState, useEffect, Fragment, useCallback } from "react"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import { Icon } from "leaflet"
 import "../css/main.css"
@@ -7,7 +7,7 @@ import { StationDepartures, renderSingleDeparture } from "./Departures"
 
 export default function Map({ map, setMap, departures, centerMarker }): JSX.Element {
     const defaultCenter = { lat: 51.5072, lng: -0.1276 }
-    const [center, setCenter] = useState(defaultCenter)
+    const [center, setCenter] = useState<{ lat: number, lng: number }>(defaultCenter)
     const defaultZoom = 13
     const stationIcon = new Icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',

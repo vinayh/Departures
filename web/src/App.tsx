@@ -1,4 +1,4 @@
-import { React, useState } from "react"
+import { useState } from "react"
 import Departures from "./components/Departures"
 import Controls from "./components/Controls"
 import Map from "./components/Map"

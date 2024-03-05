@@ -1,7 +1,8 @@
-import { React, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import "../css/main.css"
+import { Map } from "leaflet";
 
-export default function Controls({ map, setCenterMarker }): JSX.Element {
+export default function Controls({ map, setCenterMarker }: { map: Map, setCenterMarker: Dispatch<SetStateAction<[number, number] | null>>}): JSX.Element {
     const [locResult, setLocResult] = useState("")
 
     function updateCenter(centerTuple: [number, number]) {
@@ -57,7 +58,7 @@ export default function Controls({ map, setCenterMarker }): JSX.Element {
             };
 
             function success(posObj: GeolocationPosition) {
-                const centerTuple = [posObj.coords.latitude, posObj.coords.longitude]
+                const centerTuple: [number, number] = [posObj.coords.latitude, posObj.coords.longitude]
                 console.log(`Got geolocation: ${posObj}, ${centerTuple}`)
                 updateCenter(centerTuple)
                 setLocResult(`✅ Set to coordinates: ${centerTuple.map(x => x.toFixed(4))}`)
