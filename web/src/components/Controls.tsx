@@ -1,20 +1,44 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react"
+import { Map } from "leaflet"
 import "../css/main.css"
-import { Map } from "leaflet";
 
-export default function Controls({ map, setCenterMarker }: { map: Map, setCenterMarker: Dispatch<SetStateAction<[number, number] | null>>}): JSX.Element {
+interface PostcodeElements extends HTMLFormControlsCollection {
+    postcode: HTMLInputElement
+}
+
+interface PostcodeFormElement extends HTMLFormElement {
+    readonly elements: PostcodeElements
+}
+
+interface LatLonElements extends HTMLFormControlsCollection {
+    latitude: HTMLInputElement
+    longitude: HTMLInputElement
+}
+
+interface LatLonFormElement extends HTMLFormElement {
+    readonly elements: LatLonElements
+}
+
+export default function Controls({
+    map,
+    setCenterMarker,
+}: {
+    map: Map | null
+    setCenterMarker: Dispatch<SetStateAction<[number, number] | null>>
+}): JSX.Element {
     const [locResult, setLocResult] = useState("")
 
     function updateCenter(centerTuple: [number, number]) {
-        map.flyTo(centerTuple, 13)
-        setCenterMarker(centerTuple)
+        if (map) {
+            map.flyTo(centerTuple, 13)
+            setCenterMarker(centerTuple)
+        }
     }
 
     function Postcode(): JSX.Element {
-
-        function handlePostcode(e: React.FormEvent) {
-            e.preventDefault();
-            const postcode: string = e.target.postcode.value
+        function handlePostcode(e: React.FormEvent<PostcodeFormElement>) {
+            e.preventDefault()
+            const postcode: string = e.currentTarget.elements.postcode.value
             const reqUrl = `https://api.postcodes.io/postcodes/${postcode}`
             console.log(reqUrl)
             fetch(reqUrl)
@@ -24,7 +48,9 @@ export default function Controls({ map, setCenterMarker }: { map: Map, setCenter
                             setLocResult(`❌ Invalid postcode: ${postcode}`)
                             console.log(`Invalid postcode: ${postcode}`)
                         }
-                        throw new Error(`Error in postcode API response ${res.status}`);
+                        throw new Error(
+                            `Error in postcode API response ${res.status}`
+                        )
                     }
                     return res
                 })
@@ -33,7 +59,7 @@ export default function Controls({ map, setCenterMarker }: { map: Map, setCenter
                     setLocResult(`✅ Set to postcode: ${res.result.postcode}`)
                     updateCenter([res.result.latitude, res.result.longitude])
                 })
-                .catch(e => console.error('Error fetching postcode:', e))
+                .catch(error => console.error("Error fetching postcode:", error.message))
         }
 
         return (
@@ -55,13 +81,20 @@ export default function Controls({ map, setCenterMarker }: { map: Map, setCenter
                 timeout: 5000,
                 enableHighAccuracy: true,
                 maximumAge: 0,
-            };
+            }
 
             function success(posObj: GeolocationPosition) {
-                const centerTuple: [number, number] = [posObj.coords.latitude, posObj.coords.longitude]
+                const centerTuple: [number, number] = [
+                    posObj.coords.latitude,
+                    posObj.coords.longitude,
+                ]
                 console.log(`Got geolocation: ${posObj}, ${centerTuple}`)
                 updateCenter(centerTuple)
-                setLocResult(`✅ Set to coordinates: ${centerTuple.map(x => x.toFixed(4))}`)
+                setLocResult(
+                    `✅ Set to coordinates: ${centerTuple.map(x =>
+                        x.toFixed(4)
+                    )}`
+                )
             }
 
             function error(e: GeolocationPositionError) {
@@ -81,20 +114,27 @@ export default function Controls({ map, setCenterMarker }: { map: Map, setCenter
             }
 
             if (navigator.geolocation) {
-                navigator.permissions.query({ name: "geolocation" })
-                    .then((result) => {
-                        console.log(result);
-                        if (result.state === "granted" || result.state === "prompt") {
-                            navigator.geolocation.getCurrentPosition(success, error, options);
+                navigator.permissions
+                    .query({ name: "geolocation" })
+                    .then(result => {
+                        console.log(result)
+                        if (
+                            result.state === "granted" ||
+                            result.state === "prompt"
+                        ) {
+                            navigator.geolocation.getCurrentPosition(
+                                success,
+                                error,
+                                options
+                            )
                         }
                     })
-                    .catch((e) => {
-                        console.log('Geolocation access denied.');
+                    .catch(_ => {
+                        console.log("Geolocation access denied.")
                         setLocResult(`❌ Geolocation access denied`)
                     })
-            }
-            else {
-                console.log("Geolocation not supported.");
+            } else {
+                console.log("Geolocation not supported.")
             }
         }
 
@@ -107,10 +147,10 @@ export default function Controls({ map, setCenterMarker }: { map: Map, setCenter
     }
 
     function LatLonForm(): JSX.Element {
-        function handleFormLatLon(e: React.FormEvent) {
-            e.preventDefault();
-            const lat = e.target.latitude.value
-            const lng = e.target.longitude.value
+        function handleFormLatLon(e: React.FormEvent<LatLonFormElement>) {
+            e.preventDefault()
+            const lat = parseFloat(e.currentTarget.elements.latitude.value)
+            const lng = parseFloat(e.currentTarget.elements.longitude.value)
             if (!isNaN(lat) && !isNaN(lng)) {
                 updateCenter([lat, lng])
                 setLocResult(`✅ Set to coordinates: ${[lat, lng]}`)
@@ -123,11 +163,11 @@ export default function Controls({ map, setCenterMarker }: { map: Map, setCenter
         return (
             <form onSubmit={handleFormLatLon}>
                 <label>
-                    Latitude: <input name="latitude" required/>
+                    Latitude: <input name="latitude" required />
                 </label>
                 <br></br>
                 <label>
-                    Longitude: <input name="longitude" required/>
+                    Longitude: <input name="longitude" required />
                 </label>
                 <br></br>
                 <button type="submit">Submit</button>
