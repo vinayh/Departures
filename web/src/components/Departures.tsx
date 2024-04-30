@@ -1,6 +1,6 @@
 import { useState, Fragment, Dispatch, SetStateAction } from "react"
-import "../css/main.css"
 import { Map } from "leaflet"
+import "../css/main.css"
 
 type Departure = {
     id: string
@@ -28,7 +28,7 @@ export function renderSingleDeparture(dep: Departure) {
     )
 }
 
-export default function Departures({
+export function Departures({
     map,
     departures,
     setDepartures,
@@ -46,7 +46,6 @@ export default function Departures({
             setIsLoading(true)
             const reqCenter = map.getCenter()
             const reqUrl = `https://departures-backend.azurewebsites.net/api/nearest?lat=${reqCenter.lat}&lng=${reqCenter.lng}`
-            // console.log(reqUrl)
             setCenterMarker([reqCenter.lat, reqCenter.lng])
             fetch(reqUrl)
                 .then(response => response.json())

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Map } from "leaflet"
-import Departures, { StationDepartures } from "./components/Departures"
+import { Departures, StationDepartures } from "./components/Departures"
 import Controls from "./components/Controls"
 import MapView from "./components/MapView"
 
