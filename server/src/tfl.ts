@@ -22,7 +22,12 @@ export async function fetchNearestStops(
     throw new Error(`StopPoint request failed (${res.status})`);
   }
 
-  const data: { stopPoints?: TflStopPoint[] } = await res.json();
+  let data: { stopPoints?: TflStopPoint[] };
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`StopPoint response returned invalid JSON (${res.status})`);
+  }
   return (data.stopPoints ?? []).map((s) => ({
     id: s.id,
     lat: s.lat,
@@ -67,7 +72,12 @@ async function fetchStopDepartures(
     throw new Error(`Arrivals request failed for ${stop.id} (${res.status})`);
   }
 
-  const arrivals: TflArrival[] = await res.json();
+  let arrivals: TflArrival[];
+  try {
+    arrivals = await res.json();
+  } catch {
+    throw new Error(`Arrivals response returned invalid JSON for ${stop.id} (${res.status})`);
+  }
   const departures: Departure[] = arrivals
     .filter((a) => modes.size === 0 || modes.has(a.modeName))
     .sort((a, b) => a.timeToStation - b.timeToStation)

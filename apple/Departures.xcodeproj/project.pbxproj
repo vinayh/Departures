@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,13 +16,11 @@
 		A13476772B5ED09800C8D2CA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11791562B50580D008414B7 /* SettingsView.swift */; };
 		A13476782B5ED0DE00C8D2CA /* StationDepartures.swift in Sources */ = {isa = PBXBuildFile; fileRef = A117915B2B505D5C008414B7 /* StationDepartures.swift */; };
 		A134767A2B5ED70200C8D2CA /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D52B992B506E4300C4A48A /* UpdateManager.swift */; };
-		A134767D2B5ED74E00C8D2CA /* StationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A134767C2B5ED74E00C8D2CA /* StationRowView.swift */; };
 		A14B47062B5EFCED006F1EFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A18E54CF2B48840100FC7285 /* Assets.xcassets */; };
 		A17721BA2B52F82E00DC3EB8 /* DeparturesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17721B92B52F82E00DC3EB8 /* DeparturesListView.swift */; };
 		A17721BC2B52F92400DC3EB8 /* DeparturesMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17721BB2B52F92400DC3EB8 /* DeparturesMapView.swift */; };
 		A180F6EF2B5EF72800F79CCB /* DeparturesListHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180F6EE2B5EF72800F79CCB /* DeparturesListHelpers.swift */; };
 		A180F6F02B5EF72800F79CCB /* DeparturesListHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180F6EE2B5EF72800F79CCB /* DeparturesListHelpers.swift */; };
-		A180F6F22B5EF82400F79CCB /* DeparturesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180F6F12B5EF82400F79CCB /* DeparturesListView.swift */; };
 		A180F6F42B5EF94C00F79CCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A18E54CF2B48840100FC7285 /* Assets.xcassets */; };
 		A18E54CC2B48840000FC7285 /* DeparturesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18E54CB2B48840000FC7285 /* DeparturesApp.swift */; };
 		A18E54D32B48840100FC7285 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A18E54D22B48840100FC7285 /* Preview Assets.xcassets */; };
@@ -38,8 +36,6 @@
 		A18E55152B48890300FC7285 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18E55042B48857200FC7285 /* AppIntent.swift */; };
 		A18E55162B48890400FC7285 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A18E55042B48857200FC7285 /* AppIntent.swift */; };
 		A192C1892B51819D00793A62 /* StationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A192C1882B51819D00793A62 /* StationRowView.swift */; };
-		A1B501CD2B5ECD0D00FB6C7F /* DeparturesWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B501CC2B5ECD0D00FB6C7F /* DeparturesWatchApp.swift */; };
-		A1B501D42B5ECD0E00FB6C7F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B501D32B5ECD0E00FB6C7F /* Preview Assets.xcassets */; };
 		A1B501D72B5ECD0E00FB6C7F /* Departures.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A1B501CA2B5ECD0D00FB6C7F /* Departures.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A1C957412B4C4B8100D73E34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A18E54CF2B48840100FC7285 /* Assets.xcassets */; };
 		A1D52B9A2B506E4300C4A48A /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D52B992B506E4300C4A48A /* UpdateManager.swift */; };
@@ -109,11 +105,9 @@
 		A11791582B505964008414B7 /* sampleDepartures.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sampleDepartures.json; sourceTree = "<group>"; };
 		A117915B2B505D5C008414B7 /* StationDepartures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDepartures.swift; sourceTree = "<group>"; };
 		A13401612B5F02C70089D57F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A134767C2B5ED74E00C8D2CA /* StationRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationRowView.swift; sourceTree = "<group>"; };
 		A17721B92B52F82E00DC3EB8 /* DeparturesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeparturesListView.swift; sourceTree = "<group>"; };
 		A17721BB2B52F92400DC3EB8 /* DeparturesMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeparturesMapView.swift; sourceTree = "<group>"; };
 		A180F6EE2B5EF72800F79CCB /* DeparturesListHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeparturesListHelpers.swift; sourceTree = "<group>"; };
-		A180F6F12B5EF82400F79CCB /* DeparturesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeparturesListView.swift; sourceTree = "<group>"; };
 		A18E54C82B48840000FC7285 /* Departures.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Departures.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A18E54CB2B48840000FC7285 /* DeparturesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeparturesApp.swift; sourceTree = "<group>"; };
 		A18E54CF2B48840100FC7285 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -134,13 +128,24 @@
 		A18E55142B48880600FC7285 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A192C1882B51819D00793A62 /* StationRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationRowView.swift; sourceTree = "<group>"; };
 		A1B501CA2B5ECD0D00FB6C7F /* Departures.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Departures.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1B501CC2B5ECD0D00FB6C7F /* DeparturesWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeparturesWatchApp.swift; sourceTree = "<group>"; };
-		A1B501D02B5ECD0E00FB6C7F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A1B501D32B5ECD0E00FB6C7F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A1D52B992B506E4300C4A48A /* UpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
 		A1F939BB2B56C0C000B651EB /* Departures.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Departures.entitlements; sourceTree = "<group>"; };
 		A1F939BC2B56C0EF00B651EB /* DeparturesWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DeparturesWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A18F92F42F85121D0074715D /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+			);
+			target = A1B501C92B5ECD0D00FB6C7F /* DeparturesWatch Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A18F92EE2F85121C0074715D /* DeparturesWatch */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (A18F92F42F85121D0074715D /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = DeparturesWatch; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A18E54C52B48840000FC7285 /* Frameworks */ = {
@@ -192,7 +197,7 @@
 				A18E54DB2B48840100FC7285 /* DeparturesTests */,
 				A18E54E52B48840100FC7285 /* DeparturesUITests */,
 				A18E54FF2B48857200FC7285 /* DeparturesWidget */,
-				A1B501CB2B5ECD0D00FB6C7F /* DeparturesWatch Watch App */,
+				A18F92EE2F85121C0074715D /* DeparturesWatch */,
 				A18E54FA2B48857200FC7285 /* Frameworks */,
 				A18E54C92B48840000FC7285 /* Products */,
 			);
@@ -275,26 +280,6 @@
 				A18E55082B48857300FC7285 /* Info.plist */,
 			);
 			path = DeparturesWidget;
-			sourceTree = "<group>";
-		};
-		A1B501CB2B5ECD0D00FB6C7F /* DeparturesWatch Watch App */ = {
-			isa = PBXGroup;
-			children = (
-				A1B501CC2B5ECD0D00FB6C7F /* DeparturesWatchApp.swift */,
-				A180F6F12B5EF82400F79CCB /* DeparturesListView.swift */,
-				A134767C2B5ED74E00C8D2CA /* StationRowView.swift */,
-				A1B501D02B5ECD0E00FB6C7F /* Assets.xcassets */,
-				A1B501D22B5ECD0E00FB6C7F /* Preview Content */,
-			);
-			path = "DeparturesWatch Watch App";
-			sourceTree = "<group>";
-		};
-		A1B501D22B5ECD0E00FB6C7F /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				A1B501D32B5ECD0E00FB6C7F /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -385,6 +370,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A18F92EE2F85121C0074715D /* DeparturesWatch */,
 			);
 			name = "DeparturesWatch Watch App";
 			productName = "DeparturesWatch Watch App";
@@ -482,7 +470,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B501D42B5ECD0E00FB6C7F /* Preview Assets.xcassets in Resources */,
 				A180F6F42B5EF94C00F79CCB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -541,11 +528,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A13476772B5ED09800C8D2CA /* SettingsView.swift in Sources */,
-				A180F6F22B5EF82400F79CCB /* DeparturesListView.swift in Sources */,
 				A134767A2B5ED70200C8D2CA /* UpdateManager.swift in Sources */,
 				A180F6F02B5EF72800F79CCB /* DeparturesListHelpers.swift in Sources */,
-				A134767D2B5ED74E00C8D2CA /* StationRowView.swift in Sources */,
-				A1B501CD2B5ECD0D00FB6C7F /* DeparturesWatchApp.swift in Sources */,
 				A13476782B5ED0DE00C8D2CA /* StationDepartures.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -908,6 +892,7 @@
 				DEVELOPMENT_TEAM = JWX3WHWDPD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DeparturesWatch;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Needs location for updating nearby departures";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.vinayh.Departures;
@@ -939,6 +924,7 @@
 				DEVELOPMENT_TEAM = JWX3WHWDPD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = DeparturesWatch;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Needs location for updating nearby departures";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.vinayh.Departures;

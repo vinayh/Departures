@@ -7,12 +7,12 @@ export type { StationDepartures } from "../shared-types"
 
 export function renderSingleDeparture(dep: Departure) {
     const arrivalTime: number = new Date(dep.arrivalTime).getTime()
-    const dep_min: number = (arrivalTime - Date.now()) / (1000 * 60)
-    const dep_min_str: string = dep_min.toFixed(0)
+    const depMin: number = (arrivalTime - Date.now()) / (1000 * 60)
+    const depMinStr: string = depMin.toFixed(0)
     return (
         <p key={dep.id}>
             {dep.line} - {dep.destination} -{" "}
-            {dep_min_str !== "-0" ? dep_min_str : "0"}
+            {depMinStr !== "-0" ? depMinStr : "0"}
         </p>
     )
 }
@@ -45,7 +45,10 @@ export function Departures({
                     setDepartures(allStationDeps)
                     setIsLoading(false)
                 })
-                .catch(e => console.error("Error fetching departures:", e))
+                .catch(e => {
+                    console.error("Error fetching departures:", e)
+                    setIsLoading(false)
+                })
         }
     }
 

@@ -29,6 +29,9 @@ export default {
     if (Number.isNaN(lat) || Number.isNaN(lng)) {
       return json({ error: "lat and lng query params are required" }, 400);
     }
+    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      return json({ error: "lat must be between -90 and 90, lng between -180 and 180" }, 400);
+    }
 
     if (!env.TFL_APP_ID || !env.TFL_APP_KEY) {
       return json({ error: "TfL API credentials are not configured" }, 500);

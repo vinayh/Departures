@@ -63,12 +63,12 @@ struct Departure: Codable, Identifiable, Equatable, Hashable {
     }
     
     var arrivingInMin: Int {
-        let arrivalDate = ISO8601DateFormatter().date(from: arrivalTime)!
+        guard let arrivalDate = ISO8601DateFormatter().date(from: arrivalTime) else { return 0 }
         return Int((arrivalDate.timeIntervalSinceNow / 60).rounded(.down))
     }
-    
+
     func arrivingMinAfter(_ date: Date) -> Int {
-        let arrivalDate = ISO8601DateFormatter().date(from: arrivalTime)!
+        guard let arrivalDate = ISO8601DateFormatter().date(from: arrivalTime) else { return 0 }
         return Int((arrivalDate.timeIntervalSince(date) / 60).rounded(.down))
     }
     
@@ -76,7 +76,7 @@ struct Departure: Codable, Identifiable, Equatable, Hashable {
     
     func foregroundColor(_ environment: EnvironmentValues) -> Color {
         let resolved = backgroundColor.resolve(in: environment)
-        let luminance = 0.2126 * resolved.red + 0.7152 * resolved.green + 0.0722 * resolved.green
+        let luminance = 0.2126 * resolved.red + 0.7152 * resolved.green + 0.0722 * resolved.blue
         return luminance < 0.6 ? .white : .black
     }
     

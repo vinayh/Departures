@@ -147,22 +147,22 @@ struct DeparturesTimelineProvider: AppIntentTimelineProvider {
                                                      locString: updateManager.locationString,
                                                      dateDeparturesUpdated: updateManager.dateDeparturesUpdated,
                                                      stations: updateManager.stations)
-        let nextUpdate = Calendar.current.date(byAdding: DateComponents(minute: 5), to: Date())!
+        let nextUpdate = Calendar.current.date(byAdding: DateComponents(minute: 5), to: Date()) ?? Date().addingTimeInterval(300)
         let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
         return timeline
     }
     
     static func configDictionary(_ cfg: ConfigurationAppIntent) -> Dictionary<String, Bool> {
         var cfgDict: [String: Bool] = [:]
-        cfgDict["mode.NaptanMetroStation"] = cfg.metroStations
-        cfgDict["mode.NaptanRailStation"] = cfg.railStations
-        cfgDict["mode.NaptanPublicBusCoachTram"] = cfg.busStops
-        cfgDict["type.tube"] = cfg.modeTube
-        cfgDict["type.dlr"] = cfg.modeDlr
-        cfgDict["type.overground"] = cfg.modeOverground
-        cfgDict["type.elizabeth-line"] = cfg.modeElizabeth
-        cfgDict["type.bus"] = cfg.modeBus
-        cfgDict["type.tram"] = cfg.modeTram
+        cfgDict["type.NaptanMetroStation"] = cfg.metroStations
+        cfgDict["type.NaptanRailStation"] = cfg.railStations
+        cfgDict["type.NaptanPublicBusCoachTram"] = cfg.busStops
+        cfgDict["mode.tube"] = cfg.modeTube
+        cfgDict["mode.dlr"] = cfg.modeDlr
+        cfgDict["mode.overground"] = cfg.modeOverground
+        cfgDict["mode.elizabeth-line"] = cfg.modeElizabeth
+        cfgDict["mode.bus"] = cfg.modeBus
+        cfgDict["mode.tram"] = cfg.modeTram
         return cfgDict
     }
 }

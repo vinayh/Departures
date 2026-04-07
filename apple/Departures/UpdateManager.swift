@@ -30,7 +30,6 @@ class UpdateManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "UpdateManager")
     let locationManager = CLLocationManager()
     private let geocoder = CLGeocoder()
-    private var locUpdateTask: Task<Bool, Error>? = nil
     lazy private var updater = Updater(stations: stations, dateDeparturesUpdated: dateDeparturesUpdated)
     private let geoloc_expiry_dist_m = 25.0
     
@@ -179,9 +178,10 @@ struct SavedDepartures: Codable {
 }
 
 actor Updater {
+    static let appGroupID = "group.com.vinayh.Departures"
     let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Updater")
     var existingTask: Task<SavedDepartures, Error>?
-    
+
     let defaultSettings = ["type.NaptanMetroStation": true,
                            "type.NaptanRailStation": true,
                            "type.NaptanPublicBusCoachTram": false,
@@ -207,8 +207,8 @@ actor Updater {
     static func reqUrl(location: CLLocation, configDictionary: Dictionary<String, Bool>? = nil) -> URL {
         let baseUrl = "https://departures-worker.mail-d7c.workers.dev/nearest"
         func getKey(_ key: String) -> Bool {
-            if let configDictionary { return configDictionary[key]! }
-            else { return UserDefaults().object(forKey: key) as! Bool }
+            if let configDictionary { return configDictionary[key] ?? false }
+            else { return UserDefaults.standard.bool(forKey: key) }
         }
         var modeTypes: [String] = []
         var stopTypes: [String] = []
@@ -227,13 +227,21 @@ actor Updater {
     }
     
     func cache(_ downloaded: SavedDepartures) {
-        let encoded = try! JSONEncoder().encode(downloaded)
-        UserDefaults(suiteName: "group.com.vinayh.Departures")!.set(encoded, forKey: "stations")
+        guard let encoded = try? JSONEncoder().encode(downloaded),
+              let defaults = UserDefaults(suiteName: Updater.appGroupID) else {
+            logger.error("Failed to encode or access App Group for caching")
+            return
+        }
+        defaults.set(encoded, forKey: "stations")
         logger.log("Caching fresh departures from: \(downloaded.date.formatted(date: .omitted, time: .shortened))")
     }
     
     func fromCache(location: CLLocation?) -> SavedDepartures? {
-        let encoded = UserDefaults(suiteName: "group.com.vinayh.Departures")!.object(forKey: "stations") as? Data
+        guard let defaults = UserDefaults(suiteName: Updater.appGroupID) else {
+            logger.error("Failed to access App Group UserDefaults")
+            return nil
+        }
+        let encoded = defaults.object(forKey: "stations") as? Data
         guard let encoded = encoded else {
             logger.log("Nothing saved in UserDefaults")
             return nil
@@ -250,7 +258,7 @@ actor Updater {
             }
         }
         logger.log("Removing expired departures from: \(saved.date.formatted(date: .omitted, time: .shortened))")
-        UserDefaults(suiteName: "group.com.vinayh.Departures")!.removeObject(forKey: "stations")
+        defaults.removeObject(forKey: "stations")
         return nil
     }
     
