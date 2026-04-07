@@ -1,9 +1,9 @@
 import { useState, Fragment, Dispatch, SetStateAction } from "react"
-import type { Departure, StationDepartures, NearestResponse } from "../../../departures-backend/src/types"
+import type { Departure, StationDepartures, NearestResponse } from "../shared-types"
 import { Map } from "leaflet"
 import "../css/main.css"
 
-export type { StationDepartures } from "../../../departures-backend/src/types"
+export type { StationDepartures } from "../shared-types"
 
 export function renderSingleDeparture(dep: Departure) {
     const arrivalTime: number = new Date(dep.arrivalTime).getTime()
