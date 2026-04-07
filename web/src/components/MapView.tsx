@@ -22,7 +22,7 @@ export default function MapView({
     setMap: Dispatch<SetStateAction<Map | null>>
     departures: StationDepartures[]
     centerMarker: [number, number] | null
-}): JSX.Element {
+}): React.JSX.Element {
     const defaultCenter = { lat: 51.5072, lng: -0.1276 }
     const [center, setCenter] = useState<{ lat: number; lng: number }>(
         defaultCenter
@@ -35,7 +35,7 @@ export default function MapView({
             "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
     })
 
-    function ShowPosition(): JSX.Element {
+    function ShowPosition(): React.JSX.Element {
         const resetView = useCallback(() => {
             if (map) {
                 map.setView(defaultCenter, defaultZoom)
@@ -69,7 +69,7 @@ export default function MapView({
     function renderStationMarker({
         station,
         departures,
-    }: StationDepartures): JSX.Element {
+    }: StationDepartures): React.JSX.Element {
         return (
             <Marker
                 key={station.id}
@@ -85,7 +85,7 @@ export default function MapView({
         )
     }
 
-    function StationMarkers(): JSX.Element {
+    function StationMarkers(): React.JSX.Element {
         return <Fragment>{departures.map(renderStationMarker)}</Fragment>
     }
 

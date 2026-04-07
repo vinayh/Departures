@@ -2,30 +2,13 @@ import { Dispatch, SetStateAction, useState } from "react"
 import { Map } from "leaflet"
 import "../css/main.css"
 
-interface PostcodeElements extends HTMLFormControlsCollection {
-    postcode: HTMLInputElement
-}
-
-interface PostcodeFormElement extends HTMLFormElement {
-    readonly elements: PostcodeElements
-}
-
-interface LatLonElements extends HTMLFormControlsCollection {
-    latitude: HTMLInputElement
-    longitude: HTMLInputElement
-}
-
-interface LatLonFormElement extends HTMLFormElement {
-    readonly elements: LatLonElements
-}
-
 export default function Controls({
     map,
     setCenterMarker,
 }: {
     map: Map | null
     setCenterMarker: Dispatch<SetStateAction<[number, number] | null>>
-}): JSX.Element {
+}): React.JSX.Element {
     const [locResult, setLocResult] = useState("")
 
     function updateCenter(centerTuple: [number, number]) {
@@ -35,10 +18,10 @@ export default function Controls({
         }
     }
 
-    function Postcode(): JSX.Element {
-        function handlePostcode(e: React.FormEvent<PostcodeFormElement>) {
+    function Postcode(): React.JSX.Element {
+        function handlePostcode(e: React.FormEvent<HTMLFormElement>) {
             e.preventDefault()
-            const postcode: string = e.currentTarget.elements.postcode.value
+            const postcode: string = (e.currentTarget.elements.namedItem("postcode") as HTMLInputElement).value
             const reqUrl = `https://api.postcodes.io/postcodes/${postcode}`
             console.log(reqUrl)
             fetch(reqUrl)
@@ -75,7 +58,7 @@ export default function Controls({
         )
     }
 
-    function Geolocation(): JSX.Element {
+    function Geolocation(): React.JSX.Element {
         function handleGeolocation() {
             const options = {
                 timeout: 5000,
@@ -146,11 +129,11 @@ export default function Controls({
         )
     }
 
-    function LatLonForm(): JSX.Element {
-        function handleFormLatLon(e: React.FormEvent<LatLonFormElement>) {
+    function LatLonForm(): React.JSX.Element {
+        function handleFormLatLon(e: React.FormEvent<HTMLFormElement>) {
             e.preventDefault()
-            const lat = parseFloat(e.currentTarget.elements.latitude.value)
-            const lng = parseFloat(e.currentTarget.elements.longitude.value)
+            const lat = parseFloat((e.currentTarget.elements.namedItem("latitude") as HTMLInputElement).value)
+            const lng = parseFloat((e.currentTarget.elements.namedItem("longitude") as HTMLInputElement).value)
             if (!isNaN(lat) && !isNaN(lng)) {
                 updateCenter([lat, lng])
                 setLocResult(`✅ Set to coordinates: ${[lat, lng]}`)

@@ -1,24 +1,13 @@
 import { useState, Fragment, Dispatch, SetStateAction } from "react"
+import type { Departure, StationDepartures, NearestResponse } from "../../../departures-backend/src/types"
 import { Map } from "leaflet"
 import "../css/main.css"
 
-type Departure = {
-    id: string
-    line: string
-    mode: string
-    destination: string
-    arrival_time: string
-}
-
-type Station = { id: string; lat: number; lon: number; name: string }
-
-export type StationDepartures = { station: Station; departures: Departure[] }
-
-type Response = { stnsDeps: StationDepartures[]; lat: number; lng: number }
+export type { StationDepartures } from "../../../departures-backend/src/types"
 
 export function renderSingleDeparture(dep: Departure) {
-    const arrival_time: number = new Date(dep.arrival_time).getTime()
-    const dep_min: number = (arrival_time - Date.now()) / (1000 * 60)
+    const arrivalTime: number = new Date(dep.arrivalTime).getTime()
+    const dep_min: number = (arrivalTime - Date.now()) / (1000 * 60)
     const dep_min_str: string = dep_min.toFixed(0)
     return (
         <p key={dep.id}>
@@ -38,21 +27,21 @@ export function Departures({
     departures: StationDepartures[]
     setDepartures: Dispatch<SetStateAction<StationDepartures[]>>
     setCenterMarker: Dispatch<SetStateAction<[number, number] | null>>
-}): JSX.Element {
+}): React.JSX.Element {
     const [isLoading, setIsLoading] = useState(false)
 
     function updateDepartures() {
         if (map) {
             setIsLoading(true)
             const reqCenter = map.getCenter()
-            const reqUrl = `https://departures-backend.azurewebsites.net/api/nearest?lat=${reqCenter.lat}&lng=${reqCenter.lng}`
+            const reqUrl = `https://departures-worker.mail-d7c.workers.dev/nearest?lat=${reqCenter.lat}&lng=${reqCenter.lng}`
             setCenterMarker([reqCenter.lat, reqCenter.lng])
             fetch(reqUrl)
                 .then(response => response.json())
                 .then(data => {
-                    const response = data as Response
+                    const response = data as NearestResponse
                     const allStationDeps: StationDepartures[] =
-                        response.stnsDeps
+                        response.stations
                     setDepartures(allStationDeps)
                     setIsLoading(false)
                 })
@@ -63,7 +52,7 @@ export function Departures({
     function renderStationDepartures({
         station,
         departures,
-    }: StationDepartures): JSX.Element {
+    }: StationDepartures): React.JSX.Element {
         return (
             <li key={station.id}>
                 <b>{station.name}</b>
@@ -73,7 +62,7 @@ export function Departures({
         )
     }
 
-    function StationDepartures(): JSX.Element {
+    function StationDepartures(): React.JSX.Element {
         return (
             <Fragment>
                 <ol>{departures.map(renderStationDepartures)}</ol>

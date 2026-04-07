@@ -4,7 +4,7 @@ import { Departures, StationDepartures } from "./components/Departures"
 import Controls from "./components/Controls"
 import MapView from "./components/MapView"
 
-export default function App(): JSX.Element {
+export default function App(): React.JSX.Element {
     const [map, setMap] = useState<Map | null>(null)
     const [departures, setDepartures] = useState<StationDepartures[]>([])
     const [centerMarker, setCenterMarker] = useState<[number, number] | null>(
