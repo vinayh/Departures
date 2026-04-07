@@ -7,6 +7,25 @@
 
 import SwiftUI
 
+private extension KeyedDecodingContainer {
+    func decodeFlexibleFloat(forKey key: K) throws -> Float {
+        if let number = try? decode(Float.self, forKey: key) {
+            return number
+        }
+        if let stringValue = try? decode(String.self, forKey: key),
+           let number = Float(stringValue) {
+            return number
+        }
+        throw DecodingError.typeMismatch(
+            Float.self,
+            DecodingError.Context(
+                codingPath: codingPath + [key],
+                debugDescription: "Expected Float or numeric String for \(key.stringValue)"
+            )
+        )
+    }
+}
+
 enum StopType: String, CaseIterable {
     case metro = "NaptanMetroStation"
     case rail = "NaptanRailStation"
@@ -27,7 +46,7 @@ struct Departure: Codable, Identifiable, Equatable, Hashable {
     let line: String
     let mode: String
     let destination: String
-    let arrival_time: String
+    let arrivalTime: String
     
     var destinationShort: String {
         return destination
@@ -44,12 +63,12 @@ struct Departure: Codable, Identifiable, Equatable, Hashable {
     }
     
     var arrivingInMin: Int {
-        let arrivalDate = ISO8601DateFormatter().date(from: arrival_time)!
+        let arrivalDate = ISO8601DateFormatter().date(from: arrivalTime)!
         return Int((arrivalDate.timeIntervalSinceNow / 60).rounded(.down))
     }
     
     func arrivingMinAfter(_ date: Date) -> Int {
-        let arrivalDate = ISO8601DateFormatter().date(from: arrival_time)!
+        let arrivalDate = ISO8601DateFormatter().date(from: arrivalTime)!
         return Int((arrivalDate.timeIntervalSince(date) / 60).rounded(.down))
     }
     
@@ -61,8 +80,8 @@ struct Departure: Codable, Identifiable, Equatable, Hashable {
         return luminance < 0.6 ? .white : .black
     }
     
-    // TODO: Check if this Equatable impl prevents UI data from updating if destination/line remain the same and only arrival_time changes
-    // Now added arrival_time comparison to StationDepartures equality function to hopefully prevent this possible issue
+    // TODO: Check if this Equatable impl prevents UI data from updating if destination/line remain the same and only arrivalTime changes
+    // Now added arrivalTime comparison to StationDepartures equality function to hopefully prevent this possible issue
     static func == (lhs: Departure, rhs: Departure) -> Bool {
         return lhs.destination == rhs.destination && lhs.line == rhs.line
     }
@@ -74,7 +93,7 @@ struct Departure: Codable, Identifiable, Equatable, Hashable {
     
     static func example() -> Departure {
         let arrivalTimeString: String = Date.init(timeIntervalSinceNow: 500).ISO8601Format()
-        return Departure(id: "test id", line: "New Tube", mode: "tube", destination: "Manchester", arrival_time: arrivalTimeString)
+        return Departure(id: "test id", line: "New Tube", mode: "tube", destination: "Manchester", arrivalTime: arrivalTimeString)
     }
 }
 
@@ -83,7 +102,7 @@ struct Station: Codable, Identifiable, Equatable {
     let lat: Float
     let lon: Float
     let name: String
-    let stop_type: String
+    let stopType: String
     let distance: Float
     
     var nameShort: String {
@@ -125,12 +144,12 @@ struct StationDepartures: Codable, Identifiable, Equatable {
     static func == (lhs: StationDepartures, rhs: StationDepartures) -> Bool {
         return lhs.station == rhs.station
         && lhs.departures == rhs.departures
-        && lhs.departures.map { dep in dep.arrival_time } == rhs.departures.map { dep in dep.arrival_time }
+        && lhs.departures.map { dep in dep.arrivalTime } == rhs.departures.map { dep in dep.arrivalTime }
     }
 }
 
 struct Response: Codable {
-    let stnsDeps: [StationDepartures]
+    let stations: [StationDepartures]
     let lat: Float
     let lng: Float
 }

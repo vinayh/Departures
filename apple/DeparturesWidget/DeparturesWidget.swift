@@ -13,7 +13,7 @@ struct DeparturesEntry: TimelineEntry {
     let configuration: ConfigurationAppIntent
     let locString: String
     let dateDeparturesUpdated: Date?
-    let stnsDeps: [StationDepartures]?
+    let stations: [StationDepartures]?
 }
 
 struct DeparturesWidgetEntryView : View {
@@ -89,16 +89,16 @@ struct DeparturesWidgetEntryView : View {
             }
             .font(.system(size: 6))
             
-            if entry.stnsDeps != nil {
+            if entry.stations != nil {
                 let columns = [
                     GridItem(.flexible()),
                     GridItem(.flexible())
                 ]
                 
                 LazyVGrid(columns: columns, spacing: 0) {
-                    ForEach(entry.stnsDeps!.indices.prefix(numStations), id: \.self) { index in
+                    ForEach(entry.stations!.indices.prefix(numStations), id: \.self) { index in
                         VStack {
-                            renderStnDeps(entry.stnsDeps![index])
+                            renderStnDeps(entry.stations![index])
                             Divider()
                         }
                     }
@@ -126,7 +126,7 @@ struct DeparturesTimelineProvider: AppIntentTimelineProvider {
                                configuration: ConfigurationAppIntent(),
                                locString: updateManager.locationString,
                                dateDeparturesUpdated: Date(),
-                               stnsDeps: UpdateManager.example().stnsDeps)
+                               stations: UpdateManager.example().stations)
     }
     
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> DeparturesEntry {
@@ -134,7 +134,7 @@ struct DeparturesTimelineProvider: AppIntentTimelineProvider {
                                     configuration: ConfigurationAppIntent(),
                                     locString: updateManager.locationString,
                                     dateDeparturesUpdated: Date(),
-                                    stnsDeps: UpdateManager.example().stnsDeps)
+                                    stations: UpdateManager.example().stations)
         return entry
     }
     
@@ -146,7 +146,7 @@ struct DeparturesTimelineProvider: AppIntentTimelineProvider {
                                                      configuration: configuration,
                                                      locString: updateManager.locationString,
                                                      dateDeparturesUpdated: updateManager.dateDeparturesUpdated,
-                                                     stnsDeps: updateManager.stnsDeps)
+                                                     stations: updateManager.stations)
         let nextUpdate = Calendar.current.date(byAdding: DateComponents(minute: 5), to: Date())!
         let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
         return timeline
@@ -185,7 +185,7 @@ struct DeparturesWidget: Widget {
 #Preview(as: .systemMedium) {
     DeparturesWidget()
 } timeline: {
-    DeparturesEntry(date: .now, configuration: .example, locString: "PREVIEW LOC", dateDeparturesUpdated: .now, stnsDeps: UpdateManager.example().stnsDeps)
+    DeparturesEntry(date: .now, configuration: .example, locString: "PREVIEW LOC", dateDeparturesUpdated: .now, stations: UpdateManager.example().stations)
 //    let updateManager = UpdateManager()
-//    DeparturesEntry(date: .now, configuration: .example, locString: updateManager.locationString, stnsDeps: updateManager.stnsDeps)
+//    DeparturesEntry(date: .now, configuration: .example, locString: updateManager.locationString, stations: updateManager.stations)
 }

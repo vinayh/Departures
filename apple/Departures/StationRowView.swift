@@ -63,6 +63,6 @@ struct StationRowView: View {
 
 #Preview {
     TimelineView(.periodic(from: Date(), by: 60.0)) { context in
-        StationRowView(stnDeps: UpdateManager.example().stnsDeps[1], context: context)
+        StationRowView(stnDeps: UpdateManager.example().stations[1], context: context)
     }
 }

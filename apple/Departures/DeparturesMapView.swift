@@ -15,7 +15,7 @@ struct DeparturesMapView: View {
     var body: some View {
         Map(position: $position) {
             UserAnnotation()
-            ForEach(updateManager.stnsDeps) { stnDeps in
+            ForEach(updateManager.stations) { stnDeps in
                 Marker(stnDeps.station.nameShort, systemImage: "tram.fill", coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(stnDeps.station.lat), longitude: CLLocationDegrees(stnDeps.station.lon)))
             }
         }
@@ -29,7 +29,7 @@ struct DeparturesMapView: View {
                 }
             }
         }
-        .onChange(of: updateManager.stnsDeps.map {stnsDep in stnsDep.station.id} ) {
+        .onChange(of: updateManager.stations.map {stnsDep in stnsDep.station.id} ) {
             if position.followsUserLocation {
                 withAnimation {
                     position = .automatic

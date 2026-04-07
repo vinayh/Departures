@@ -31,13 +31,13 @@ class UpdateManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     let locationManager = CLLocationManager()
     private let geocoder = CLGeocoder()
     private var locUpdateTask: Task<Bool, Error>? = nil
-    lazy private var updater = Updater(stnsDeps: stnsDeps, dateDeparturesUpdated: dateDeparturesUpdated)
+    lazy private var updater = Updater(stations: stations, dateDeparturesUpdated: dateDeparturesUpdated)
     private let geoloc_expiry_dist_m = 25.0
     
     @Published var updating = false
     @Published var location: CLLocation? = nil
     @Published var locationString: String = "Unknown"
-    @Published var stnsDeps: [StationDepartures] = [StationDepartures]()
+    @Published var stations: [StationDepartures] = [StationDepartures]()
     @Published var dateDeparturesUpdated: Date? = nil
     @Published var dateDepartureUpdateAttempted: Date? = nil
     
@@ -63,12 +63,12 @@ class UpdateManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var status: Status {
         if updating, dateDepartureUpdateAttempted != nil {
             if dateDeparturesUpdated != nil {
-                if stnsDeps.count > 0 { return Status.loadedFetching(attemptedMinAgo: updateAttemptedMinAgo!, updatedMinAgo: updatedMinAgo!) }
+                if stations.count > 0 { return Status.loadedFetching(attemptedMinAgo: updateAttemptedMinAgo!, updatedMinAgo: updatedMinAgo!) }
                 else { return Status.noResultsFetching(attemptedMinAgo: updateAttemptedMinAgo!, updatedMinAgo: updatedMinAgo!) }
             } else { return Status.initFetching(attemptedMinAgo: updateAttemptedMinAgo!) }
         } else if !updating {
             if dateDeparturesUpdated != nil {
-                if stnsDeps.count > 0 { return Status.loaded(updatedMinAgo: updatedMinAgo!, attemptedMinAgo: updateAttemptedMinAgo!) }
+                if stations.count > 0 { return Status.loaded(updatedMinAgo: updatedMinAgo!, attemptedMinAgo: updateAttemptedMinAgo!) }
                 else { return Status.noResults(updatedMinAgo: updatedMinAgo!, attemptedMinAgo: updateAttemptedMinAgo!) }
             } else if dateDepartureUpdateAttempted == nil { return Status.initial }
         }
@@ -142,7 +142,7 @@ class UpdateManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             let updatedData = try await updater.updated(location: loc ?? location,
                                                         force: force,
                                                         configDictionary: configDictionary)
-            stnsDeps = updatedData.stnsDeps
+            stations = updatedData.stations
             dateDeparturesUpdated = updatedData.date
             updating = await updater.existingTask != nil
             return true
@@ -158,12 +158,12 @@ class UpdateManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         if let url = Bundle.main.url(forResource: "sampleDepartures", withExtension: "json") {
             do {
                 let jsonData = try Data(contentsOf: url)
-                updateManager.stnsDeps = try JSONDecoder().decode([StationDepartures].self, from: jsonData)
+                updateManager.stations = try JSONDecoder().decode([StationDepartures].self, from: jsonData)
             } catch {
-                updateManager.stnsDeps = []
+                updateManager.stations = []
             }
         } else {
-            updateManager.stnsDeps = []
+            updateManager.stations = []
         }
         updateManager.dateDeparturesUpdated = Date()
         return updateManager
@@ -171,7 +171,7 @@ class UpdateManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 }
 
 struct SavedDepartures: Codable {
-    let stnsDeps: [StationDepartures]
+    let stations: [StationDepartures]
     let time: Double
     let lat: Float
     let lng: Float
@@ -200,12 +200,12 @@ actor Updater {
         case fetchError
     }
     
-    init(stnsDeps: [StationDepartures], dateDeparturesUpdated: Date?) {
+    init(stations: [StationDepartures], dateDeparturesUpdated: Date?) {
         UserDefaults.standard.register(defaults: defaultSettings)
     }
     
     static func reqUrl(location: CLLocation, configDictionary: Dictionary<String, Bool>? = nil) -> URL {
-        let baseUrl = "https://departures-backend.azurewebsites.net/api/nearest"
+        let baseUrl = "https://departures-worker.mail-d7c.workers.dev/nearest"
         func getKey(_ key: String) -> Bool {
             if let configDictionary { return configDictionary[key]! }
             else { return UserDefaults().object(forKey: key) as! Bool }
@@ -228,12 +228,12 @@ actor Updater {
     
     func cache(_ downloaded: SavedDepartures) {
         let encoded = try! JSONEncoder().encode(downloaded)
-        UserDefaults(suiteName: "group.com.vinayh.Departures")!.set(encoded, forKey: "stnsDeps")
+        UserDefaults(suiteName: "group.com.vinayh.Departures")!.set(encoded, forKey: "stations")
         logger.log("Caching fresh departures from: \(downloaded.date.formatted(date: .omitted, time: .shortened))")
     }
     
     func fromCache(location: CLLocation?) -> SavedDepartures? {
-        let encoded = UserDefaults(suiteName: "group.com.vinayh.Departures")!.object(forKey: "stnsDeps") as? Data
+        let encoded = UserDefaults(suiteName: "group.com.vinayh.Departures")!.object(forKey: "stations") as? Data
         guard let encoded = encoded else {
             logger.log("Nothing saved in UserDefaults")
             return nil
@@ -250,7 +250,7 @@ actor Updater {
             }
         }
         logger.log("Removing expired departures from: \(saved.date.formatted(date: .omitted, time: .shortened))")
-        UserDefaults(suiteName: "group.com.vinayh.Departures")!.removeObject(forKey: "stnsDeps")
+        UserDefaults(suiteName: "group.com.vinayh.Departures")!.removeObject(forKey: "stations")
         return nil
     }
     
@@ -270,7 +270,7 @@ actor Updater {
         }
         do {
             let response = try await task.value
-            let downloaded = SavedDepartures(stnsDeps: response.stnsDeps,
+            let downloaded = SavedDepartures(stations: response.stations,
                                              time: Date().timeIntervalSince1970,
                                              lat: Float(location.coordinate.latitude),
                                              lng: Float(location.coordinate.longitude))

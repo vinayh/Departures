@@ -18,11 +18,11 @@ func locationTextView(_ updateManager: UpdateManager) -> some View {
 }
 
 func stationImageView(_ stnDeps: StationDepartures) -> AnyView {
-    if stnDeps.station.stop_type == "NaptanMetroStation" {
+    if stnDeps.station.stopType == "NaptanMetroStation" {
         return AnyView(Image("underground_logo")
             .resizable()
             .aspectRatio(contentMode: .fit))
-    } else if stnDeps.station.stop_type == "NaptanRailStation" {
+    } else if stnDeps.station.stopType == "NaptanRailStation" {
         return AnyView(Image("national_rail_logo")
             .resizable()
             .aspectRatio(contentMode: .fit))

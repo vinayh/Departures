@@ -55,13 +55,13 @@ struct DeparturesListView: View {
     
     func listView(_ context: TimelineViewDefaultContext) -> AnyView {
         AnyView(List {
-            ForEach(updateManager.stnsDeps) { stnDeps in
+            ForEach(updateManager.stations) { stnDeps in
                 StationRowView(stnDeps: stnDeps, context: context)
             }
         }
             .transition(.slide)
             .zIndex(1)
-            .animation(.easeInOut(duration: 1.0), value: updateManager.stnsDeps)
+            .animation(.easeInOut(duration: 1.0), value: updateManager.stations)
             .listStyle(.inset)
         )
     }
