@@ -1,25 +1,35 @@
 # Departures backend
 
-This repository now exposes the `/nearest` endpoint via a Cloudflare Worker.
-The Worker calls the public TfL APIs to find nearby stops and return departures
-for the requested modes.
+A Cloudflare Worker that returns upcoming TfL departures for nearby stations in London. Used by the Departures web and iOS widget frontends.
 
-## Prerequisites
+## Setup
 
-- Node.js 18+
-- Cloudflare Wrangler CLI (installed automatically via `npm install`)
-- TfL API credentials stored as Cloudflare Worker secrets:
-  - `wrangler secret put TFL_APP_ID`
-  - `wrangler secret put TFL_APP_KEY`
-
-## Local development
+Requires Node.js 18+. Wrangler CLI is installed as a dev dependency.
 
 ```bash
 npm install
-npm run dev
 ```
 
-Wrangler will start a local preview at `http://localhost:8787`.
+TfL API credentials are needed. For local development, create a `.env` file:
+
+```
+TFL_APP_ID=your_app_id
+TFL_APP_KEY=your_app_key
+```
+
+For production, set them as Cloudflare Worker secrets:
+
+```bash
+wrangler secret put TFL_APP_ID
+wrangler secret put TFL_APP_KEY
+```
+
+## Development
+
+```bash
+npm run dev        # local preview at http://localhost:8787
+npm run check      # type-check
+```
 
 ## Deployment
 
@@ -29,25 +39,29 @@ npm run deploy
 
 ## API
 
-`GET /nearest?lat=<latitude>&lng=<longitude>&stopTypes=<comma-separated>&modes=<comma-separated>`
+`GET /nearest?lat=<latitude>&lng=<longitude>&stopTypes=<types>&modes=<modes>&radius=<meters>`
 
-- `lat` and `lng` are required.
-- `stopTypes` defaults to `NaptanMetroStation,NaptanRailStation`.
-- `modes` defaults to `tube,dlr,overground,elizabeth-line,bus`.
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `lat` | yes | | Latitude |
+| `lng` | yes | | Longitude |
+| `stopTypes` | no | `NaptanMetroStation,NaptanRailStation` | Comma-separated TfL stop types |
+| `modes` | no | `tube,dlr,overground,elizabeth-line,bus` | Comma-separated transport modes |
+| `radius` | no | `2000` | Search radius in meters |
 
-The response mirrors the previous Flask structure:
+### Response
 
 ```json
 {
   "lat": 51.501,
   "lng": -0.124,
-  "stnsDeps": [
+  "stations": [
     {
       "station": {
         "id": "940GZZLUGPK",
         "name": "Green Park Underground Station",
         "modes": ["tube"],
-        "stop_type": "NaptanMetroStation",
+        "stopType": "NaptanMetroStation",
         "distance": 210.5,
         "lat": 51.502,
         "lon": -0.143
@@ -58,10 +72,18 @@ The response mirrors the previous Flask structure:
           "line": "jubilee",
           "mode": "tube",
           "destination": "Stanmore",
-          "arrival_time": "2024-11-27T09:12:30Z"
+          "arrivalTime": "2024-11-27T09:12:30Z"
         }
       ]
     }
   ]
 }
 ```
+
+## Breaking changes
+
+The response shape changed from the previous Python/Flask backend:
+
+- `stnsDeps` renamed to `stations`
+- `arrival_time` renamed to `arrivalTime`
+- `stop_type` renamed to `stopType`
