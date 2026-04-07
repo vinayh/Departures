@@ -29,7 +29,7 @@ def get_secret_from_file(path) -> str:
     try:
         with path.open("r") as f:
             return f.read()
-    except:
+    except Exception:
         print(f"Error getting secret {path}")
         raise
 
@@ -77,7 +77,7 @@ def download_all_stops():
     try:
         res = requests.get(
             endpoint,
-            headers={},  # TODO: Check if better to include cookie here?
+            headers={},
             params=API_PARAMS,
         )
         print(f"Got response, status {res.status_code}")
@@ -86,7 +86,7 @@ def download_all_stops():
         with open("all_stops_2024-01-18.json", mode="wt") as f:
             f.write(res.text)
     except Exception as e:
-        print.error(e)
+        print(f"Error: {e}")
         raise
     print("Saved JSON response to file")
 
@@ -101,7 +101,7 @@ def read_pickle_all_stops(filenames: list[str]) -> list[CachedStop]:
             res_stops = json.loads(stops_json)
             all_stops += [CachedStop(s) for s in res_stops["stopPoints"]]
         except Exception as e:
-            print.error(e)
+            print(f"Error: {e}")
             raise
     with open("all_stops.pkl", mode="wb") as f:
         pickle.dump(all_stops, f)
